@@ -14,7 +14,7 @@ import { directions } from '../../data/home';
       titleBreak={directions.titleBreak}
       lead={directions.lead}
     />
-    <div class="grid grid--2">
+    <div class="grid grid--2" data-reveal-stagger>
       {directions.items.map((item) => <PhotoCard {...item} size="lg" sizes="(min-width: 48rem) 640px, 100vw" />)}
     </div>
   </div>

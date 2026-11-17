@@ -261,7 +261,13 @@ main:focus {
   transition:
     background-color var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-press) var(--ease);
+}
+
+/* Drukfeedback: de knop geeft licht mee onder de vinger of muis. */
+.btn:active {
+  transform: scale(0.97);
 }
 
 .btn--lg {
@@ -283,8 +289,10 @@ main:focus {
   height: 1.25rem;
 }
 
-.btn:hover svg {
-  transform: translateX(3px);
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover svg {
+    transform: translateX(3px);
+  }
 }
 
 .btn--gold {
@@ -355,21 +363,113 @@ main:focus {
   background-size: 100% 1px;
 }
 
-.link-arrow:hover svg,
 .link-arrow:focus-visible svg {
   transform: translateX(4px);
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .link-arrow:hover svg {
+    transform: translateX(4px);
+  }
+}
+
+/* ---------- Beweging: verschijnen bij het scrollen ----------
+ * [data-reveal] verschijnt één keer wanneer het in beeld komt (scripts/site.ts zet .is-in en --i).
+ * Kinderen van [data-reveal-stagger] krijgen automatisch [data-reveal]; elementen die tegelijk
+ * in beeld komen, starten 80 ms na elkaar. Enkel actief met JavaScript (html.js).
+ * Keyframes met fill-mode "backwards": na afloop gelden de gewone stijlen weer, hover blijft werken.
+ */
+.js [data-reveal]:not(.is-in) {
+  opacity: 0;
+}
+
+.js [data-reveal].is-in {
+  animation: reveal-up var(--dur-reveal) var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * var(--stagger));
+}
+
+/* Gouden lijn van de eyebrow wordt getekend wanneer de kop verschijnt. */
+.eyebrow::before {
+  transform-origin: left;
+}
+
+.js [data-reveal].is-in .eyebrow::before {
+  animation: draw-x 900ms var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * var(--stagger) + 150ms);
+}
+
+/* Foto's in kaarten: gordijn van onder naar boven, de foto zelf zakt licht in. */
+.js .card[data-reveal].is-in .card__media {
+  animation: wipe-up var(--dur-hero) var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * var(--stagger) + 60ms);
+}
+
+.js .card[data-reveal].is-in .card__media img {
+  animation: settle 1400ms var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * var(--stagger) + 60ms);
+}
+
+/* Werkwijze: gouden accent boven elke stap wordt getekend. */
+.js .step[data-reveal].is-in::before {
+  transform-origin: left;
+  animation: draw-x 900ms var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * var(--stagger) + 200ms);
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+}
+
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes draw-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes wipe-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+}
+
+@keyframes settle {
+  from {
+    transform: scale(1.12);
+  }
+}
+
+/* Minder beweging: minder en zachter, niet niets. Alleen fades; geen verplaatsing, schaal of tekenen. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .js [data-reveal].is-in {
+    animation-name: reveal-fade;
+  }
+
+  .js [data-reveal].is-in .eyebrow::before,
+  .js .card[data-reveal].is-in .card__media,
+  .js .card[data-reveal].is-in .card__media img,
+  .js .step[data-reveal].is-in::before {
+    animation: none;
+  }
+
+  .btn:active {
+    transform: none;
+  }
+
+  .btn svg,
+  .link-arrow svg {
+    transition: none;
   }
 }

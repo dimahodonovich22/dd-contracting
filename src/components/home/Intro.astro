@@ -4,18 +4,29 @@ import { intro } from '../../data/home';
 
 <section class="section intro" aria-labelledby="intro-title">
   <div class="container">
-    <div class="intro__statement">
+    <div class="intro__statement" data-reveal>
       <p class="eyebrow">{intro.eyebrow}</p>
       <h2 id="intro-title" class="h2">
         {intro.title} <span class="muted">{intro.titleMuted}</span>
       </h2>
     </div>
-    <dl class="intro__stats">
+    <dl class="intro__stats" data-reveal-stagger>
       {
         intro.stats.map((s) => (
           <div class="intro__stat">
             <dt>{s.label}</dt>
-            <dd>{s.value}</dd>
+            <dd>
+              {/^\d+$/.test(s.value) ? (
+                <>
+                  <span aria-hidden="true" data-count={s.value}>
+                    {s.value}
+                  </span>
+                  <span class="visually-hidden">{s.value}</span>
+                </>
+              ) : (
+                s.value
+              )}
+            </dd>
           </div>
         ))
       }

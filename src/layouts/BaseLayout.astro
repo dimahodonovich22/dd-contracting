@@ -19,6 +19,17 @@ const noindex = import.meta.env.PUBLIC_NOINDEX === 'true';
 <html lang={site.lang}>
   <head>
     <meta charset="utf-8" />
+    <!-- Vroeg: verberg te onthullen elementen pas als JS draait (geen flits). Vangnet: laadt
+         scripts/site.ts niet binnen 2,5 s, dan wordt alles gewoon getoond. -->
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        setTimeout(function () {
+          if (!root.classList.contains('reveal-ready')) root.classList.remove('js');
+        }, 2500);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />

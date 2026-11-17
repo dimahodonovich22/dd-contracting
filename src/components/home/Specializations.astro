@@ -15,7 +15,7 @@ import { specializations } from '../../data/home';
       lead={specializations.lead}
     />
     <div class="spec__content">
-      <div class="grid grid--3">
+      <div class="grid grid--3" data-reveal-stagger>
         {specializations.items.map((item) => <PhotoCard {...item} size="md" />)}
       </div>
       <AllServices />

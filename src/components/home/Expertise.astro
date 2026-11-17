@@ -14,7 +14,7 @@ import { expertise } from '../../data/home';
       titleBreak={expertise.titleBreak}
       lead={expertise.lead}
     />
-    <div class="grid grid--2">
+    <div class="grid grid--2" data-reveal-stagger>
       {expertise.items.map((item) => <PhotoCard {...item} size="feature" sizes="(min-width: 48rem) 640px, 100vw" />)}
     </div>
   </div>

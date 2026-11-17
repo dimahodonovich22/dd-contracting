@@ -22,10 +22,10 @@ import { serviceCount } from '../../data/services';
     </SectionHead>
 
     <div class="showcase__content">
-      <div class="grid grid--3">
+      <div class="grid grid--3" data-reveal-stagger>
         {showcase.items.map((item) => <PhotoCard {...item} size="tall" />)}
       </div>
-      <p class="showcase__note small">{showcase.note}</p>
+      <p class="showcase__note small" data-reveal>{showcase.note}</p>
     </div>
   </div>
 </section>

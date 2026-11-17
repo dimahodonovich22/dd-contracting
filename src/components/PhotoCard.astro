@@ -124,8 +124,10 @@ const widths = size === 'lg' || size === 'feature' ? [480, 720, 960, 1280] : [40
     transition: transform 900ms var(--ease);
   }
 
-  .card:hover .card__media :global(img) {
-    transform: scale(1.03);
+  @media (hover: hover) and (pointer: fine) {
+    .card:hover .card__media :global(img) {
+      transform: scale(1.03);
+    }
   }
 
   .card__badge {

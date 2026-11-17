@@ -27,7 +27,17 @@ import { primaryCta } from '../../data/site';
         <span class="hero__eyebrow-short">{hero.eyebrowShort}</span>
       </p>
       <h1 id="hero-title" class="hero__title">
-        {hero.titleLines.join(' ')}
+        {
+          hero.titleLines.map((line, i) => (
+            <>
+              <span class="hero__line">
+                <span class="hero__line-inner" style={`--l:${i}`}>
+                  {line}
+                </span>
+              </span>{' '}
+            </>
+          ))
+        }
       </h1>
       <p class="hero__lead">{hero.lead}</p>
       <div class="hero__actions">
@@ -42,7 +52,7 @@ import { primaryCta } from '../../data/site';
     <ol class="hero__areas" role="list" aria-label="Core service areas">
       {
         hero.areas.map((a, i) => (
-          <li>
+          <li style={`--a:${i}`}>
             <a href={`#vakgebied-${a.category}`} data-open-services={a.category}>
               <span class="hero__area-num">{String(i + 1).padStart(2, '0')}</span>
               <span class="hero__area-name">{a.label}</span>
@@ -158,6 +168,18 @@ import { primaryCta } from '../../data/site';
     letter-spacing: -0.04em;
   }
 
+  /* Elke regel is een masker; de tekst schuift er van onderen in. Extra ruimte voor onderstokken. */
+  .hero__line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+  }
+
+  .hero__line-inner {
+    display: inline-block;
+  }
+
   .hero__lead {
     max-width: 37.5rem;
     font-size: var(--fs-lead);
@@ -193,17 +215,28 @@ import { primaryCta } from '../../data/site';
   }
 
   .hero__areas a {
+    position: relative;
     display: grid;
     align-content: start;
     gap: var(--space-8);
     height: 100%;
     padding-top: var(--space-20);
-    border-top: 1px solid var(--border-on-dark);
-    transition: border-color var(--dur) var(--ease);
   }
 
-  .hero__areas a:hover {
-    border-color: var(--gold);
+  /* Lijn als pseudo-element, zodat ze kan worden "getekend" (scaleX) zonder layout. */
+  .hero__areas a::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background: var(--border-on-dark);
+    transform-origin: left;
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  .hero__areas a:hover::before,
+  .hero__areas a:focus-visible::before {
+    background: var(--gold);
   }
 
   .hero__area-num {
@@ -217,31 +250,90 @@ import { primaryCta } from '../../data/site';
     color: var(--text-on-dark);
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .hero__media :global(img) {
-      animation: hero-settle 2.4s var(--ease) both;
+  /* ---------- Openingssequentie (eenmalig bij het laden) ----------
+   * 1. foto zakt rustig in  2. gouden lijn + eyebrow  3. titelregels schuiven uit hun masker
+   * 4. inleiding en knoppen  5. lijnen boven de vakgebieden worden van links getekend.
+   */
+  .hero__media :global(img) {
+    animation: hero-settle 2000ms var(--ease) backwards;
+  }
+
+  .hero .eyebrow {
+    animation: hero-fade 700ms var(--ease) 100ms backwards;
+  }
+
+  .hero .eyebrow::before {
+    transform-origin: left;
+    animation: hero-draw 900ms var(--ease) 150ms backwards;
+  }
+
+  .hero__line-inner {
+    animation: hero-line var(--dur-hero) var(--ease) backwards;
+    animation-delay: calc(200ms + var(--l) * 110ms);
+  }
+
+  .hero__lead {
+    animation: hero-rise var(--dur-reveal) var(--ease) 480ms backwards;
+  }
+
+  .hero__actions {
+    animation: hero-rise var(--dur-reveal) var(--ease) 580ms backwards;
+  }
+
+  .hero__areas a::before {
+    animation: hero-draw 1000ms var(--ease) backwards;
+    animation-delay: calc(700ms + var(--a) * 90ms);
+  }
+
+  .hero__area-num,
+  .hero__area-name {
+    animation: hero-rise 700ms var(--ease) backwards;
+    animation-delay: calc(780ms + var(--a) * 90ms);
+  }
+
+  /* ---------- Parallax bij het scrollen: foto blijft achter, tekst wijkt ---------- */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .hero__media {
+        animation: hero-parallax linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 100vh;
+      }
+
+      .hero__inner {
+        animation: hero-recede linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 80vh;
+      }
+    }
+  }
+
+  /* Minder beweging: alleen zachte fades, geen verplaatsing of schaal. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__media :global(img),
+    .hero .eyebrow::before,
+    .hero__areas a::before {
+      animation: none;
     }
 
-    .hero__content > * {
-      animation: hero-rise 0.75s var(--ease) both;
-    }
-
-    .hero__content > :nth-child(2) {
-      animation-delay: 80ms;
-    }
-
-    .hero__content > :nth-child(3) {
-      animation-delay: 160ms;
-    }
-
-    .hero__content > :nth-child(4) {
-      animation-delay: 240ms;
+    .hero__line-inner,
+    .hero__lead,
+    .hero__actions,
+    .hero__area-num,
+    .hero__area-name {
+      animation-name: hero-fade;
     }
   }
 
   @keyframes hero-settle {
     from {
-      transform: scale(1.06);
+      transform: scale(1.08);
+    }
+  }
+
+  @keyframes hero-line {
+    from {
+      transform: translate3d(0, 105%, 0);
     }
   }
 
@@ -249,6 +341,31 @@ import { primaryCta } from '../../data/site';
     from {
       opacity: 0;
       transform: translate3d(0, 16px, 0);
+    }
+  }
+
+  @keyframes hero-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes hero-draw {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  @keyframes hero-parallax {
+    to {
+      transform: translate3d(0, 30%, 0);
+    }
+  }
+
+  @keyframes hero-recede {
+    to {
+      opacity: 0.25;
+      transform: translate3d(0, -6%, 0);
     }
   }
 </style>

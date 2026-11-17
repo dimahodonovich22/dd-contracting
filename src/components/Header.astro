@@ -105,6 +105,14 @@ import { serviceCategories } from '../data/services';
     transition:
       background-color var(--dur) var(--ease),
       backdrop-filter var(--dur) var(--ease);
+    animation: header-in 800ms var(--ease) 250ms backwards;
+  }
+
+  @keyframes header-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -12px, 0);
+    }
   }
 
   /* Na het scrollen: donkere balk, zodat wit menu en gouden logo leesbaar blijven. */
@@ -201,9 +209,14 @@ import { serviceCategories } from '../data/services';
     transition: transform var(--dur) var(--ease);
   }
 
-  .site-nav a:hover::after,
   .site-nav a[aria-current='true']::after {
     transform: scaleX(1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .site-nav a:hover::after {
+      transform: scaleX(1);
+    }
   }
 
   .cta-long {
@@ -265,6 +278,29 @@ import { serviceCategories } from '../data/services';
 
   .menu:global(.is-open) .menu__panel {
     transform: none;
+  }
+
+  /* Minder beweging: menu en balk verschijnen met een fade, zonder te schuiven. */
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      animation-name: header-fade;
+    }
+
+    .menu__panel {
+      transform: none;
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease);
+    }
+
+    .menu:global(.is-open) .menu__panel {
+      opacity: 1;
+    }
+  }
+
+  @keyframes header-fade {
+    from {
+      opacity: 0;
+    }
   }
 
   .menu__top {

@@ -17,7 +17,7 @@ const { id, eyebrow, title, titleMuted, titleBreak = false, lead } = Astro.props
 const hasAside = Astro.slots.has('aside');
 ---
 
-<div class="section-head">
+<div class="section-head" data-reveal-stagger>
   <div class="section-head__main">
     <p class="eyebrow">{eyebrow}</p>
     <h2 id={id} class="h2">

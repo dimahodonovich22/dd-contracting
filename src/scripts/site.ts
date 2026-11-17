@@ -166,6 +166,63 @@ function initActiveNav() {
   sections.forEach((s) => io.observe(s));
 }
 
+/* ---------- Verschijnen bij het scrollen ----------
+ * [data-reveal] krijgt één keer .is-in wanneer het in beeld komt (zie styles/global.css).
+ * Elementen die in dezelfde batch binnenkomen, krijgen --i = 0, 1, 2 … in documentvolgorde:
+ * op desktop starten kaarten in een rij dus na elkaar, op mobiel start elke kaart meteen.
+ */
+function countUp(el: HTMLElement) {
+  const target = Number(el.dataset.count);
+  if (!Number.isFinite(target) || reduceMotion.matches) return;
+  const duration = 1200;
+  const start = performance.now();
+  const easeOut = (t: number) => 1 - Math.pow(1 - t, 4);
+  const tick = (now: number) => {
+    const t = Math.min(1, (now - start) / duration);
+    el.textContent = String(Math.round(target * easeOut(t)));
+    if (t < 1) requestAnimationFrame(tick);
+  };
+  el.textContent = '0';
+  requestAnimationFrame(tick);
+}
+
+function initReveal() {
+  const root = document.documentElement;
+  document.querySelectorAll<HTMLElement>('[data-reveal-stagger]').forEach((group) => {
+    Array.from(group.children).forEach((child) => child.setAttribute('data-reveal', ''));
+  });
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+
+  const show = (el: HTMLElement, index: number) => {
+    el.style.setProperty('--i', String(Math.min(index, 5)));
+    el.classList.add('is-in');
+    const delay = Math.min(index, 5) * 80;
+    el.querySelectorAll<HTMLElement>('[data-count]').forEach((n) => window.setTimeout(() => countUp(n), delay));
+  };
+
+  if (!('IntersectionObserver' in window)) {
+    items.forEach((el) => el.classList.add('is-in'));
+    root.classList.add('reveal-ready');
+    return;
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries
+        .filter((e) => e.isIntersecting)
+        .map((e) => e.target as HTMLElement)
+        .sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1))
+        .forEach((el, i) => {
+          show(el, i);
+          io.unobserve(el);
+        });
+    },
+    { rootMargin: '0px 0px -10% 0px', threshold: 0 },
+  );
+  items.forEach((el) => io.observe(el));
+  root.classList.add('reveal-ready');
+}
+
 /* ---------- Contactformulier (demo: valideert, verstuurt niets) ---------- */
 type Rule = (value: string, field: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) => string | null;
 
@@ -253,6 +310,7 @@ function initForm() {
   });
 }
 
+initReveal();
 initMenu();
 initHeader();
 initServicesLinks();

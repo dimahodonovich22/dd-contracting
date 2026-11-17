@@ -72,7 +72,11 @@
   --radius-pill: 999px;
 
   /* Beweging */
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1); /* sterke ease-out voor alles wat binnenkomt */
+  --dur-press: 140ms; /* drukfeedback op knoppen */
   --dur-fast: 200ms;
   --dur: 400ms;
+  --dur-reveal: 800ms; /* secties die bij het scrollen verschijnen (marketing, eenmalig) */
+  --dur-hero: 1100ms; /* openingssequentie van de hero */
+  --stagger: 80ms;
 }

@@ -9,12 +9,12 @@ import { primaryCta } from '../../data/site';
   op mobiel een accordeon. Elk vakgebied is een <details> met een eigen anker.
 -->
 <div class="all-services" id="alle-diensten" data-all-services>
-  <div class="all-services__head">
+  <div class="all-services__head" data-reveal>
     <h3 class="h3">All {serviceCount} services</h3>
     <p class="small">The complete overview, by service area.</p>
   </div>
 
-  <div class="all-services__grid">
+  <div class="all-services__grid" data-reveal-stagger>
     {
       serviceCategories.map((cat, i) => (
         <details class="area" id={`vakgebied-${cat.slug}`} data-area open>
