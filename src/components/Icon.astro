@@ -1,0 +1,34 @@
+---
+interface Props {
+  name: 'arrow-right' | 'arrow-up-right' | 'arrow-up' | 'plus' | 'close' | 'check' | 'info' | 'chevron-down' | 'menu';
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+
+const paths: Record<Props['name'], string> = {
+  'arrow-right': 'M4 12h15M13 6l6 6-6 6',
+  'arrow-up-right': 'M7 17 17 7M8 7h9v9',
+  'arrow-up': 'M12 20V5M6 11l6-6 6 6',
+  plus: 'M12 5v14M5 12h14',
+  close: 'M6 6l12 12M18 6 6 18',
+  check: 'M5 12.5 10 17 19 7',
+  info: 'M12 16v-5M12 8h.01M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z',
+  'chevron-down': 'm6 9 6 6 6-6',
+  menu: 'M4 9h16M4 15h16',
+};
+---
+
+<svg
+  class={className}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={paths[name]}></path>
+</svg>

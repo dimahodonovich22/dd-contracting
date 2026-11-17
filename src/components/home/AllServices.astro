@@ -1,0 +1,201 @@
+---
+import Icon from '../Icon.astro';
+import { serviceCategories, serviceCount } from '../../data/services';
+import { primaryCta } from '../../data/site';
+---
+
+<!--
+  Eén markup voor beide weergaven: op desktop een raster van 4 kolommen (altijd open),
+  op mobiel een accordeon. Elk vakgebied is een <details> met een eigen anker.
+-->
+<div class="all-services" id="alle-diensten" data-all-services>
+  <div class="all-services__head">
+    <h3 class="h3">All {serviceCount} services</h3>
+    <p class="small">The complete overview, by service area.</p>
+  </div>
+
+  <div class="all-services__grid">
+    {
+      serviceCategories.map((cat, i) => (
+        <details class="area" id={`vakgebied-${cat.slug}`} data-area open>
+          <summary class="area__summary">
+            <span class="area__num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="area__name">{cat.name}</span>
+            <span class="area__count" aria-label={`${cat.services.length} services`}>
+              {cat.services.length}
+            </span>
+            <span class="area__toggle" aria-hidden="true">
+              <Icon name="plus" />
+            </span>
+          </summary>
+          <ul class="area__list" role="list">
+            {cat.services.map((s) => (
+              <li id={`dienst-${s.slug}`} title={s.description}>
+                {s.name}
+              </li>
+            ))}
+          </ul>
+        </details>
+      ))
+    }
+
+    <div class="help">
+      <div class="help__text">
+        <p class="h4">Not sure which service fits?</p>
+        <p class="small">Describe your situation and we'll look at it together.</p>
+      </div>
+      <a class="btn btn--gold" href={primaryCta.href}>
+        {primaryCta.label}
+        <Icon name="arrow-right" />
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .all-services {
+    display: grid;
+    gap: var(--space-24);
+    padding: var(--panel-pad);
+    border-radius: var(--radius-lg);
+    background: var(--bg-subtle);
+    scroll-margin-top: calc(var(--header-h) + var(--space-16));
+  }
+
+  .all-services__head {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .all-services__head .small {
+    color: var(--text-muted);
+  }
+
+  .all-services__grid {
+    display: grid;
+  }
+
+  /* ---------- Vakgebied ---------- */
+  .area {
+    border-top: 1px solid var(--border-strong);
+    scroll-margin-top: calc(var(--header-h) + var(--space-16));
+  }
+
+  .area__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-12);
+    min-height: 3.5rem;
+    padding-block: var(--space-16);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .area__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .area__num {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--gold-deep);
+  }
+
+  .area__name {
+    flex: 1;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .area__count {
+    font-size: var(--fs-small);
+    color: var(--text-muted);
+  }
+
+  .area__toggle :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .area[open] .area__toggle :global(svg) {
+    transform: rotate(45deg);
+  }
+
+  .area__list {
+    display: grid;
+    gap: var(--space-4);
+    padding: 0 0 var(--space-16) calc(1.25rem + var(--space-12));
+    font-size: var(--fs-small);
+    line-height: 1.57;
+    color: var(--text-muted);
+  }
+
+  /* ---------- Hulpblok ---------- */
+  .help {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-16);
+    margin-top: var(--space-24);
+    padding: var(--space-24);
+    border-radius: var(--radius-lg);
+    background: var(--bg-inverse);
+    color: var(--text-on-dark);
+    --focus: var(--gold);
+  }
+
+  .help__text {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .help .small {
+    color: var(--text-on-dark-muted);
+  }
+
+  /* ---------- Desktop: raster van 4 kolommen ---------- */
+  @media (min-width: 64rem) {
+    .all-services {
+      gap: var(--space-40);
+    }
+
+    .all-services__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-40) var(--space-24);
+    }
+
+    .area {
+      padding-top: var(--space-20);
+    }
+
+    .area__summary {
+      display: grid;
+      gap: var(--space-12);
+      min-height: 0;
+      padding: 0 0 var(--space-12);
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .area__name {
+      font-size: var(--fs-h4);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .area__count,
+    .area__toggle {
+      display: none;
+    }
+
+    .area__list {
+      gap: 0;
+      padding: 0;
+    }
+
+    .help {
+      align-content: space-between;
+      margin-top: 0;
+    }
+  }
+</style>

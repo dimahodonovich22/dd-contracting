@@ -1,0 +1,21 @@
+---
+import SectionHead from '../SectionHead.astro';
+import PhotoCard from '../PhotoCard.astro';
+import { directions } from '../../data/home';
+---
+
+<section id="diensten" class="section section--subtle" aria-labelledby="diensten-title">
+  <div class="container">
+    <SectionHead
+      id="diensten-title"
+      eyebrow={directions.eyebrow}
+      title={directions.title}
+      titleMuted={directions.titleMuted}
+      titleBreak={directions.titleBreak}
+      lead={directions.lead}
+    />
+    <div class="grid grid--2">
+      {directions.items.map((item) => <PhotoCard {...item} size="lg" sizes="(min-width: 48rem) 640px, 100vw" />)}
+    </div>
+  </div>
+</section>

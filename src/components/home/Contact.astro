@@ -1,0 +1,103 @@
+---
+import Icon from '../Icon.astro';
+import ContactForm from '../ContactForm.astro';
+import { contact } from '../../data/home';
+---
+
+<section id="contact" class="section contact" aria-labelledby="contact-title">
+  <div class="container contact__grid">
+    <div class="contact__intro">
+      <div class="contact__head">
+        <p class="eyebrow">{contact.eyebrow}</p>
+        <h2 id="contact-title" class="h2">
+          {contact.title}<br /><span class="muted">{contact.titleMuted}</span>
+        </h2>
+        <p class="lead">{contact.lead}</p>
+      </div>
+
+      <div class="contact__checklist">
+        <h3 class="h4">{contact.checklistTitle}</h3>
+        <ul role="list">
+          {
+            contact.checklist.map((item) => (
+              <li>
+                <span class="contact__check" aria-hidden="true">
+                  <Icon name="check" />
+                </span>
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <ContactForm />
+  </div>
+</section>
+
+<style>
+  .section > .contact__grid {
+    gap: var(--head-gap);
+  }
+
+  @media (min-width: 64rem) {
+    .section > .contact__grid {
+      grid-template-columns: 32.5rem minmax(0, 1fr);
+      align-items: start;
+      gap: var(--space-64);
+    }
+  }
+
+  .contact__intro {
+    display: grid;
+    gap: var(--space-32);
+  }
+
+  .contact__head {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-16);
+  }
+
+  @media (min-width: 64rem) {
+    .contact__head {
+      gap: var(--space-24);
+    }
+  }
+
+  .contact__checklist {
+    display: grid;
+    gap: var(--space-16);
+    padding-top: var(--space-32);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .contact__checklist ul {
+    display: grid;
+    gap: var(--space-16);
+  }
+
+  .contact__checklist li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-12);
+    color: var(--text-secondary);
+  }
+
+  .contact__check {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--radius-pill);
+    background: var(--gold);
+    color: var(--text-primary);
+  }
+
+  .contact__check :global(svg) {
+    width: 1rem;
+    height: 1rem;
+  }
+</style>

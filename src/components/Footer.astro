@@ -1,0 +1,171 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { mainNav, site } from '../data/site';
+import { serviceCategories } from '../data/services';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <Logo size="footer" />
+        <p class="small">
+          Specialist construction work: repair and strengthening of structures, protective systems, technical research and
+          independent quality control.
+        </p>
+      </div>
+
+      <nav class="site-footer__col" aria-labelledby="footer-nav">
+        <h2 id="footer-nav">Navigation</h2>
+        <ul role="list">
+          {mainNav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav class="site-footer__col" aria-labelledby="footer-vak">
+        <h2 id="footer-vak">Service areas</h2>
+        <ul role="list">
+          {
+            serviceCategories.map((c) => (
+              <li>
+                <a href={`#vakgebied-${c.slug}`} data-open-services={c.slug}>
+                  {c.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="site-footer__col">
+        <h2>Contact</h2>
+        {/* TODO: bevestigde contactgegevens tonen zodra beschikbaar (site.contact). */}
+        <ul role="list">
+          {site.contact.phone && <li><a href={`tel:${site.contact.phone.replace(/\s+/g, '')}`}>{site.contact.phone}</a></li>}
+          {site.contact.email && <li><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></li>}
+          {site.contact.address && <li>{site.contact.address}</li>}
+          <li><a href="#contact">Contact form →</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom small">
+      <p>© {year} {site.name}</p>
+      {site.contact.vat && <p>VAT {site.contact.vat}</p>}
+      <a href="#top" class="site-footer__top-link">
+        Back to top
+        <Icon name="arrow-up" />
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-64) var(--space-32);
+    background: var(--bg-inverse);
+    color: var(--text-on-dark);
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer {
+      padding-block: var(--space-96) var(--space-48);
+    }
+  }
+
+  .site-footer__top {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-40) var(--space-24);
+  }
+
+  .site-footer__brand {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-24);
+    grid-column: 1 / -1;
+  }
+
+  .site-footer__brand p {
+    max-width: 22.5rem;
+    color: var(--text-on-dark-muted);
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer__top {
+      grid-template-columns: 22.5rem repeat(3, minmax(0, 1fr));
+      gap: var(--space-64);
+    }
+
+    .site-footer__brand {
+      grid-column: auto;
+    }
+  }
+
+  .site-footer__col {
+    display: grid;
+    align-content: start;
+    gap: var(--space-16);
+  }
+
+  .site-footer__col h2 {
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    line-height: 1.33;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-on-dark-muted);
+  }
+
+  .site-footer__col ul {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .site-footer__col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    font-size: var(--fs-small);
+    transition: color var(--dur-fast) var(--ease);
+  }
+
+  .site-footer__col a:hover {
+    color: var(--gold-light);
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-12) var(--space-24);
+    margin-top: var(--space-40);
+    padding-top: var(--space-24);
+    border-top: 1px solid var(--border-on-dark);
+    color: var(--text-on-dark-muted);
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer__bottom {
+      margin-top: var(--space-64);
+      padding-top: var(--space-32);
+    }
+  }
+
+  .site-footer__top-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: 2.75rem;
+    color: var(--text-on-dark);
+  }
+
+  .site-footer__top-link :global(svg) {
+    width: 1rem;
+    height: 1rem;
+  }
+</style>

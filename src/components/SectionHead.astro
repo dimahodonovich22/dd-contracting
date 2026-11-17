@@ -1,0 +1,62 @@
+---
+/**
+ * Vaste sectiekop: eyebrow + tweekleurige H2 links, inleiding (+ optionele link) rechts.
+ * Op smalle schermen alles onder elkaar.
+ */
+interface Props {
+  id: string;
+  eyebrow: string;
+  title: string;
+  titleMuted?: string;
+  /** Het gedempte deel op een nieuwe regel zetten. */
+  titleBreak?: boolean;
+  lead?: string;
+}
+
+const { id, eyebrow, title, titleMuted, titleBreak = false, lead } = Astro.props;
+const hasAside = Astro.slots.has('aside');
+---
+
+<div class="section-head">
+  <div class="section-head__main">
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 id={id} class="h2">
+      {title}{titleMuted && <>{titleBreak ? <br /> : ' '}<span class="muted">{titleMuted}</span></>}
+    </h2>
+  </div>
+  {
+    (lead || hasAside) && (
+      <div class="section-head__aside">
+        {lead && <p class="lead">{lead}</p>}
+        <slot name="aside" />
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .section-head {
+    display: grid;
+    gap: var(--space-16);
+  }
+
+  .section-head__main,
+  .section-head__aside {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-16);
+  }
+
+  @media (min-width: 64rem) {
+    .section-head {
+      grid-template-columns: minmax(0, 46rem) minmax(0, 1fr);
+      align-items: end;
+      column-gap: var(--space-64);
+    }
+
+    .section-head__main,
+    .section-head__aside {
+      gap: var(--space-24);
+    }
+  }
+</style>

@@ -1,0 +1,266 @@
+---
+import Icon from './Icon.astro';
+import { serviceCategories } from '../data/services';
+---
+
+<form class="form" novalidate data-contact-form aria-labelledby="form-title">
+  <div class="form__head">
+    <h3 id="form-title" class="h3">Project request</h3>
+    <p class="form__required small"><span aria-hidden="true">*</span> required field</p>
+  </div>
+
+  <div class="form__grid">
+    <div class="field">
+      <label class="field__label" for="f-naam">Name <span class="field__req" aria-hidden="true">*</span></label>
+      <input
+        class="field__control"
+        id="f-naam"
+        name="naam"
+        type="text"
+        autocomplete="name"
+        placeholder="First and last name"
+        required
+        aria-describedby="f-naam-error"
+      />
+      <p class="field__error" id="f-naam-error" hidden></p>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="f-bedrijf">Company <span class="field__opt">(optional)</span></label>
+      <input class="field__control" id="f-bedrijf" name="bedrijf" type="text" autocomplete="organization" placeholder="Company name" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="f-email">Email <span class="field__req" aria-hidden="true">*</span></label>
+      <input
+        class="field__control"
+        id="f-email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        inputmode="email"
+        placeholder="name@company.com"
+        required
+        aria-describedby="f-email-error"
+      />
+      <p class="field__error" id="f-email-error" hidden></p>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="f-telefoon">Phone <span class="field__req" aria-hidden="true">*</span></label>
+      <input
+        class="field__control"
+        id="f-telefoon"
+        name="telefoon"
+        type="tel"
+        autocomplete="tel"
+        inputmode="tel"
+        placeholder="+32 …"
+        required
+        aria-describedby="f-telefoon-error"
+      />
+      <p class="field__error" id="f-telefoon-error" hidden></p>
+    </div>
+
+    <div class="field field--full">
+      <label class="field__label" for="f-dienst">Service <span class="field__req" aria-hidden="true">*</span></label>
+      <div class="field__select">
+        <select class="field__control" id="f-dienst" name="dienst" required aria-describedby="f-dienst-error">
+          <option value="">Choose a service</option>
+          {
+            serviceCategories.map((cat) => (
+              <optgroup label={cat.name}>
+                {cat.services.map((s) => (
+                  <option value={s.slug}>{s.name}</option>
+                ))}
+              </optgroup>
+            ))
+          }
+          <option value="andere">Other question / not yet decided</option>
+        </select>
+        <Icon name="chevron-down" />
+      </div>
+      <p class="field__error" id="f-dienst-error" hidden></p>
+    </div>
+
+    <div class="field field--full">
+      <label class="field__label" for="f-omschrijving"
+        >Project description <span class="field__req" aria-hidden="true">*</span></label
+      >
+      <textarea
+        class="field__control"
+        id="f-omschrijving"
+        name="omschrijving"
+        rows="5"
+        placeholder="Type of building or structure, location, description of the damage or the work required, preferred timing…"
+        required
+        minlength="20"
+        aria-describedby="f-omschrijving-error"></textarea>
+      <p class="field__error" id="f-omschrijving-error" hidden></p>
+    </div>
+  </div>
+
+  <div class="form__foot">
+    <button class="btn btn--gold btn--lg form__submit" type="submit">
+      Send request
+      <Icon name="arrow-right" />
+    </button>
+  </div>
+
+  <div class="form__status" role="status" aria-live="polite" data-form-status hidden>
+    <Icon name="info" />
+    <p></p>
+  </div>
+</form>
+
+<style>
+  .form {
+    display: grid;
+    gap: var(--space-24);
+    padding: var(--panel-pad);
+    border-radius: var(--radius-lg);
+    background: var(--bg-subtle);
+  }
+
+  .form__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-16);
+  }
+
+  .form__required {
+    color: var(--text-muted);
+  }
+
+  .form__grid {
+    display: grid;
+    gap: var(--space-20) var(--space-16);
+  }
+
+  @media (min-width: 40rem) {
+    .form__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field--full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .field {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .field__label {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    line-height: 1.57;
+  }
+
+  .field__req {
+    color: var(--gold-deep);
+  }
+
+  .field__opt {
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  .field__control {
+    width: 100%;
+    min-height: 3.5rem;
+    padding: var(--space-16);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--bg-page);
+    line-height: 1.5;
+    transition:
+      border-color var(--dur-fast) var(--ease),
+      box-shadow var(--dur-fast) var(--ease);
+  }
+
+  .field__control::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+  }
+
+  .field__control:hover {
+    border-color: rgb(18 18 18 / 0.36);
+  }
+
+  .field__control:focus-visible {
+    outline: none;
+    border-color: var(--gold-deep);
+    box-shadow: 0 0 0 3px rgb(217 164 65 / 0.35);
+  }
+
+  .field__control[aria-invalid='true'] {
+    border-color: #b42318;
+  }
+
+  textarea.field__control {
+    min-height: 9rem;
+    resize: vertical;
+  }
+
+  .field__select {
+    position: relative;
+  }
+
+  .field__select select {
+    padding-right: var(--space-48);
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .field__select :global(svg) {
+    position: absolute;
+    top: 50%;
+    right: var(--space-16);
+    width: 1.25rem;
+    height: 1.25rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .field__error {
+    font-size: var(--fs-small);
+    line-height: 1.5;
+    color: #b42318;
+  }
+
+  .form__submit {
+    width: 100%;
+  }
+
+  @media (min-width: 40rem) {
+    .form__submit {
+      width: auto;
+    }
+  }
+
+  .form__status {
+    display: flex;
+    gap: var(--space-12);
+    padding: var(--space-16);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--bg-page);
+    font-size: var(--fs-small);
+    color: var(--text-secondary);
+  }
+
+  .form__status[hidden] {
+    display: none;
+  }
+
+  .form__status :global(svg) {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--gold-deep);
+  }
+</style>

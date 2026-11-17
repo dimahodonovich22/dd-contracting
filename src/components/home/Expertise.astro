@@ -1,0 +1,21 @@
+---
+import SectionHead from '../SectionHead.astro';
+import PhotoCard from '../PhotoCard.astro';
+import { expertise } from '../../data/home';
+---
+
+<section id="expertise" class="section section--subtle" aria-labelledby="expertise-title">
+  <div class="container">
+    <SectionHead
+      id="expertise-title"
+      eyebrow={expertise.eyebrow}
+      title={expertise.title}
+      titleMuted={expertise.titleMuted}
+      titleBreak={expertise.titleBreak}
+      lead={expertise.lead}
+    />
+    <div class="grid grid--2">
+      {expertise.items.map((item) => <PhotoCard {...item} size="feature" sizes="(min-width: 48rem) 640px, 100vw" />)}
+    </div>
+  </div>
+</section>

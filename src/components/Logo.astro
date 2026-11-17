@@ -1,0 +1,63 @@
+---
+/**
+ * Officieel logo van DD Contracting — aangeleverd op 12-11-2026 via de chat (WebP, 2000 × 620 px).
+ *
+ *  - src/assets/brand/dd-contracting-logo-origineel.webp: het ontvangen bestand, ongewijzigd.
+ *  - src/assets/brand/dd-contracting-logo.png: dezelfde afbeelding met enkel de zwarte achtergrond
+ *    transparant gemaakt en de lege buitenmarge weggesneden (1963 × 400 px). Niet hertekend;
+ *    verhoudingen ongewijzigd. Bedoeld voor donkere achtergronden.
+ *
+ * TODO: vervangen door het originele bronbestand (SVG, of PNG met transparante achtergrond).
+ */
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/dd-contracting-logo.png';
+
+interface Props {
+  size?: 'header' | 'footer' | 'menu';
+}
+
+const { size = 'header' } = Astro.props;
+
+// Grootste weergavebreedte in CSS-pixels; de srcset levert daarvan 1x, 2x en 3x.
+const width = size === 'footer' ? 240 : 160;
+---
+
+<span class:list={['logo', `logo--${size}`]}>
+  <Image
+    src={logo}
+    alt="DD Contracting"
+    width={width}
+    densities={[1, 2, 3]}
+    quality={90}
+    loading={size === 'footer' ? 'lazy' : 'eager'}
+  />
+</span>
+
+<style>
+  .logo {
+    --logo-h: 1.875rem;
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+  }
+
+  /* Schaalt mee van mobiel (375) naar desktop (1440), zoals in Figma. */
+  .logo--header {
+    --logo-h: clamp(1.625rem, 1.493rem + 0.5634vw, 2rem);
+  }
+
+  .logo--menu {
+    --logo-h: 1.625rem;
+  }
+
+  .logo--footer {
+    --logo-h: clamp(2rem, 1.824rem + 0.7512vw, 2.5rem);
+  }
+
+  .logo :global(img) {
+    display: block;
+    width: auto;
+    max-width: none;
+    height: var(--logo-h);
+  }
+</style>

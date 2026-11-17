@@ -1,0 +1,42 @@
+---
+import SectionHead from '../SectionHead.astro';
+import PhotoCard from '../PhotoCard.astro';
+import Icon from '../Icon.astro';
+import { showcase } from '../../data/home';
+import { serviceCount } from '../../data/services';
+---
+
+<section id="in-beeld" class="section" aria-labelledby="in-beeld-title">
+  <div class="container">
+    <SectionHead
+      id="in-beeld-title"
+      eyebrow={showcase.eyebrow}
+      title={showcase.title}
+      titleMuted={showcase.titleMuted}
+      lead={showcase.lead}
+    >
+      <a slot="aside" class="link-arrow" href="#alle-diensten" data-open-services="">
+        <span class="link-arrow__label">All {serviceCount} services</span>
+        <Icon name="arrow-right" />
+      </a>
+    </SectionHead>
+
+    <div class="showcase__content">
+      <div class="grid grid--3">
+        {showcase.items.map((item) => <PhotoCard {...item} size="tall" />)}
+      </div>
+      <p class="showcase__note small">{showcase.note}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .showcase__content {
+    display: grid;
+    gap: var(--space-24);
+  }
+
+  .showcase__note {
+    color: var(--text-muted);
+  }
+</style>

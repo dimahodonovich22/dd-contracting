@@ -1,0 +1,87 @@
+---
+import SectionHead from '../SectionHead.astro';
+import Icon from '../Icon.astro';
+import { process } from '../../data/home';
+import { primaryCta } from '../../data/site';
+---
+
+<section id="werkwijze" class="section section--subtle" aria-labelledby="werkwijze-title">
+  <div class="container">
+    <SectionHead
+      id="werkwijze-title"
+      eyebrow={process.eyebrow}
+      title={process.title}
+      titleMuted={process.titleMuted}
+      lead={process.lead}
+    >
+      <a slot="aside" class="link-arrow" href={primaryCta.href}>
+        <span class="link-arrow__label">{primaryCta.label}</span>
+        <Icon name="arrow-right" />
+      </a>
+    </SectionHead>
+
+    <ol class="steps" role="list">
+      {
+        process.steps.map((step, i) => (
+          <li class="step">
+            <span class="step__num">
+              <span class="visually-hidden">Step </span>
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3 class="step__title h4">{step.title}</h3>
+            <p class="step__text">{step.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps {
+    display: grid;
+    gap: var(--space-32) var(--grid-gap);
+  }
+
+  @media (min-width: 48rem) {
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .step {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--space-16);
+    padding-top: var(--space-24);
+    border-top: 1px solid var(--border-strong);
+  }
+
+  /* Gouden accent op de lijn boven elke stap. */
+  .step::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 2.5rem;
+    height: 2px;
+    background: var(--gold);
+  }
+
+  .step__num {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--gold-deep);
+  }
+
+  .step__text {
+    color: var(--text-muted);
+  }
+</style>

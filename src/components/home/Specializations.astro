@@ -1,0 +1,31 @@
+---
+import SectionHead from '../SectionHead.astro';
+import PhotoCard from '../PhotoCard.astro';
+import AllServices from './AllServices.astro';
+import { specializations } from '../../data/home';
+---
+
+<section id="specialisaties" class="section" aria-labelledby="specialisaties-title">
+  <div class="container">
+    <SectionHead
+      id="specialisaties-title"
+      eyebrow={specializations.eyebrow}
+      title={specializations.title}
+      titleMuted={specializations.titleMuted}
+      lead={specializations.lead}
+    />
+    <div class="spec__content">
+      <div class="grid grid--3">
+        {specializations.items.map((item) => <PhotoCard {...item} size="md" />)}
+      </div>
+      <AllServices />
+    </div>
+  </div>
+</section>
+
+<style>
+  .spec__content {
+    display: grid;
+    gap: var(--grid-gap);
+  }
+</style>

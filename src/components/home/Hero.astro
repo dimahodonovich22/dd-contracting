@@ -1,0 +1,254 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from '../Icon.astro';
+import { hero } from '../../data/home';
+import { primaryCta } from '../../data/site';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__media">
+    <Picture
+      src={hero.image}
+      alt={hero.alt}
+      widths={[640, 960, 1280, 1680, 1915]}
+      sizes="100vw"
+      formats={['avif', 'webp']}
+      loading="eager"
+      fetchpriority="high"
+      class="hero__img"
+    />
+    <div class="hero__shade" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__inner container">
+    <div class="hero__content">
+      <p class="eyebrow eyebrow--on-dark">
+        <span class="hero__eyebrow-long">{hero.eyebrow}</span>
+        <span class="hero__eyebrow-short">{hero.eyebrowShort}</span>
+      </p>
+      <h1 id="hero-title" class="hero__title">
+        {hero.titleLines.join(' ')}
+      </h1>
+      <p class="hero__lead">{hero.lead}</p>
+      <div class="hero__actions">
+        <a class="btn btn--gold btn--lg" href={primaryCta.href}>
+          {primaryCta.label}
+          <Icon name="arrow-right" />
+        </a>
+        <a class="btn btn--outline-dark btn--lg" href="#diensten">Explore our services</a>
+      </div>
+    </div>
+
+    <ol class="hero__areas" role="list" aria-label="Core service areas">
+      {
+        hero.areas.map((a, i) => (
+          <li>
+            <a href={`#vakgebied-${a.category}`} data-open-services={a.category}>
+              <span class="hero__area-num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="hero__area-name">{a.label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    min-height: auto;
+    padding-top: calc(var(--header-h) + var(--space-48));
+    padding-bottom: var(--space-40);
+    overflow: hidden;
+    color: var(--text-on-dark);
+    background: var(--bg-inverse);
+  }
+
+  @media (min-width: 64rem) {
+    .hero {
+      min-height: clamp(44rem, 100svh, 56.25rem);
+      padding-top: calc(var(--header-h) + var(--space-64));
+      padding-bottom: var(--space-64);
+    }
+  }
+
+  .hero__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__media :global(picture),
+  .hero__media :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* De vakman staat rechts in de foto; de tekst valt over de lege hal. */
+  .hero__media :global(img) {
+    object-fit: cover;
+    object-position: 86% 50%;
+  }
+
+  @media (min-width: 64rem) {
+    .hero__media :global(img) {
+      object-position: 90% 50%;
+    }
+  }
+
+  /* Hele foto verdonkerd (wens klant), extra verloop links achter de tekst en onderaan. */
+  .hero__shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgb(5 5 5 / 0) 40%, rgb(5 5 5 / 0.6) 100%),
+      rgb(5 5 5 / 0.55);
+  }
+
+  @media (min-width: 64rem) {
+    .hero__shade {
+      background:
+        linear-gradient(90deg, rgb(5 5 5 / 0.6) 0%, rgb(5 5 5 / 0) 62%),
+        linear-gradient(180deg, rgb(5 5 5 / 0) 50%, rgb(5 5 5 / 0.6) 100%),
+        rgb(5 5 5 / 0.42);
+    }
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: var(--space-48);
+  }
+
+  .hero__content {
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: var(--space-24);
+    max-width: 55rem;
+  }
+
+  @media (min-width: 64rem) {
+    .hero__content {
+      gap: var(--space-32);
+    }
+  }
+
+  .hero__eyebrow-long {
+    display: none;
+  }
+
+  @media (min-width: 40rem) {
+    .hero__eyebrow-long {
+      display: inline;
+    }
+
+    .hero__eyebrow-short {
+      display: none;
+    }
+  }
+
+  .hero__title {
+    font-size: var(--fs-display);
+    font-weight: 700;
+    line-height: 1.045;
+    letter-spacing: -0.04em;
+  }
+
+  .hero__lead {
+    max-width: 37.5rem;
+    font-size: var(--fs-lead);
+    line-height: 1.6;
+    color: var(--text-on-dark-muted);
+  }
+
+  .hero__actions {
+    display: grid;
+    gap: var(--space-12);
+    width: 100%;
+  }
+
+  @media (min-width: 40rem) {
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-16);
+      width: auto;
+    }
+  }
+
+  .hero__areas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--grid-gap);
+  }
+
+  @media (min-width: 64rem) {
+    .hero__areas {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .hero__areas a {
+    display: grid;
+    align-content: start;
+    gap: var(--space-8);
+    height: 100%;
+    padding-top: var(--space-20);
+    border-top: 1px solid var(--border-on-dark);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .hero__areas a:hover {
+    border-color: var(--gold);
+  }
+
+  .hero__area-num {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--gold-light);
+  }
+
+  .hero__area-name {
+    font-weight: 500;
+    color: var(--text-on-dark);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__media :global(img) {
+      animation: hero-settle 2.4s var(--ease) both;
+    }
+
+    .hero__content > * {
+      animation: hero-rise 0.75s var(--ease) both;
+    }
+
+    .hero__content > :nth-child(2) {
+      animation-delay: 80ms;
+    }
+
+    .hero__content > :nth-child(3) {
+      animation-delay: 160ms;
+    }
+
+    .hero__content > :nth-child(4) {
+      animation-delay: 240ms;
+    }
+  }
+
+  @keyframes hero-settle {
+    from {
+      transform: scale(1.06);
+    }
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 16px, 0);
+    }
+  }
+</style>
